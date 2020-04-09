@@ -1,0 +1,41 @@
+CREATE TABLE "User" (
+	"Username"	TEXT NOT NULL UNIQUE,
+	"Password"	TEXT NOT NULL,
+	"Email"	TEXT NOT NULL,
+	"FirstName"	TEXT NOT NULL,
+	"LastName"	TEXT NOT NULL,
+	"Gender"	TEXT NOT NULL,
+	"PersonID"	TEXT NOT NULL UNIQUE,
+	FOREIGN KEY("PersonID") REFERENCES "Persons"("PersonID"),
+	CONSTRAINT CK_GENDER CHECK (GENDER IN ('M', 'F')) 
+);
+CREATE TABLE "Persons" (
+	"PersonID"	TEXT NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"AssociatedUsername"	TEXT NOT NULL,
+	"FirstName"	TEXT NOT NULL,
+	"LastName"	TEXT NOT NULL,
+	"Gender"	TEXT NOT NULL,
+	"FatherID"	TEXT,
+	"MotherID"	TEXT,
+	"SpouseID"	TEXT,
+	FOREIGN KEY("AssociatedUsername") REFERENCES "User"("Username"),
+	CONSTRAINT CK_GENDER CHECK (GENDER IN ('M', 'F')) 
+);
+CREATE TABLE "AuthTokens" (
+	"Token"	TEXT NOT NULL UNIQUE,
+	"Username"	TEXT NOT NULL,
+	FOREIGN KEY("Username") REFERENCES "User"("UserID")
+);
+CREATE TABLE "Events" (
+	"EventID"	TEXT NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"AssociatedUsername"	TEXT NOT NULL,
+	"PersonID"	TEXT NOT NULL,
+	"Latitude"	FLOAT,
+	"Longitude"	FLOAT,
+	"Country"	TEXT,
+	"City"	TEXT,
+	"EventType"	TEXT,
+	"Year"	INTEGER,
+	FOREIGN KEY("AssociatedUsername") REFERENCES "User"("UserID"),
+	FOREIGN KEY("PersonID") REFERENCES "Persons"("PersonID")
+);
